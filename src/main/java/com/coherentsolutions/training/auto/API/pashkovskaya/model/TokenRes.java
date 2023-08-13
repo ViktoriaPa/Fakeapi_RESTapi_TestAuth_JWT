@@ -18,7 +18,4 @@ public class TokenRes {
     public void setToken(String token){
         this.token = token;
     }
-    public void printToken(){
-        System.out.println(token);
-    }
 }

@@ -15,14 +15,14 @@ public class BaseTest {
 
         User user = new User(PropertiesFileReader.getEmail(), PropertiesFileReader.getPassword());
 
-        TokenRes.getInstance().setToken(given()
+        String token = given()
                 .when()
                 .body(user)
                 .post("auth/login")
                 .then()
-                .extract().body().jsonPath().getString("access_token"));
+                .extract().body().jsonPath().getString("access_token");
 
-        TokenRes.getInstance().printToken();
+        TokenRes.getInstance().setToken(token);
         Specs.instalSpec(Specs.requestSpec(PropertiesFileReader.getBaseURI()), Specs.responseSpecOK200());
     }
 }
