@@ -1,60 +1,67 @@
 package com.coherentsolutions.training.auto.API.pashkovskaya.util;
 
 import io.qameta.allure.Attachment;
+import io.restassured.RestAssured;
+import io.restassured.filter.log.LogDetail;
+import io.restassured.filter.log.RequestLoggingFilter;
+import io.restassured.filter.log.ResponseLoggingFilter;
+
 import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Date;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 
 public class TestAllureListener implements ITestListener {
-    private final Logger log = LoggerFactory.getLogger(TestAllureListener.class);
-    private static String getTestMethodName (ITestResult iTestResult){
-        return iTestResult.getMethod().getConstructorOrMethod().getName();
+    private ByteArrayOutputStream request = new ByteArrayOutputStream();
+    private ByteArrayOutputStream response = new ByteArrayOutputStream();
+
+    private PrintStream requestVar = new PrintStream(request, true);
+    private PrintStream responseVar = new PrintStream(response, true);
+
+
+    public void onStart(ITestContext iTestContext) {
+        RestAssured.filters(new ResponseLoggingFilter(LogDetail.ALL, responseVar),
+                new RequestLoggingFilter(LogDetail.ALL, requestVar));
     }
 
-    @Attachment(value = "{0}", type = "text/plain")
-    public static String saveTextLog (String message){
-        return message;
-    }
-
-    @Override
-    public void onTestStart(ITestResult iTestResult) {
-
-    }
-
-    @Override
     public void onTestSuccess(ITestResult iTestResult) {
-
+        logRequest(request);
+        logResponse(response);
     }
 
-    @Override
     public void onTestFailure(ITestResult iTestResult) {
-        log.info("I am in onTestFailure method " + getTestMethodName(iTestResult) + " failed");
-        Date d = new Date();
-        String[] dateTokens = d.toString().split(" ");
-        saveTextLog(dateTokens[1] + ", " + dateTokens[2] + " " + dateTokens[5] + "; " + dateTokens[3] + " " + getTestMethodName(iTestResult) + " failed and screenshot taken");
+        onTestSuccess(iTestResult);
     }
 
-    @Override
+    @Attachment(value = "request")
+    public byte[] logRequest(ByteArrayOutputStream stream) {
+        return attach(stream);
+    }
+
+    @Attachment(value = "response")
+    public byte[] logResponse(ByteArrayOutputStream stream) {
+        return attach(stream);
+    }
+
+    public byte[] attach(ByteArrayOutputStream log) {
+        byte[] array = log.toByteArray();
+        log.reset();
+        return array;
+    }
+
+    public void onTestStart(ITestResult iTestResult) {
+    }
+
     public void onTestSkipped(ITestResult iTestResult) {
 
     }
 
-    @Override
     public void onTestFailedButWithinSuccessPercentage(ITestResult iTestResult) {
 
     }
 
-    @Override
-    public void onStart(ITestContext iTestContext) {
-
-    }
-
-    @Override
     public void onFinish(ITestContext iTestContext) {
 
     }
