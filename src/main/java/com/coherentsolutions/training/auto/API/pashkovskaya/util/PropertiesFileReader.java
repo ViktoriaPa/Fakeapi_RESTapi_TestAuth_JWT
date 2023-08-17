@@ -40,4 +40,16 @@ public class PropertiesFileReader {
         String password = prop.getProperty("password");
         return password;
     }
+
+    public static String getFilePath() {
+        setPropsCache();
+        String filePath = prop.getProperty("filePath");
+        return filePath;
+    }
+
+    public static String getFileName() {
+        setPropsCache();
+        String fileName = prop.getProperty("fileName");
+        return fileName;
+    }
 }

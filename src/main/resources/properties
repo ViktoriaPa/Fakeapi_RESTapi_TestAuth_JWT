@@ -2,3 +2,6 @@ baseURI=https://api.escuelajs.co/api/v1/
 
 email=john@mail.com
 password=changeme
+
+filePath=src/main/resources/cat.png
+fileName=cat.png
