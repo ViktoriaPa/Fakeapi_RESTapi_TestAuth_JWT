@@ -4,6 +4,7 @@ import com.coherentsolutions.training.auto.API.pashkovskaya.specs.Specs;
 import com.coherentsolutions.training.auto.API.pashkovskaya.model.TokenRes;
 import com.coherentsolutions.training.auto.API.pashkovskaya.model.User;
 import com.coherentsolutions.training.auto.API.pashkovskaya.util.PropertiesFileReader;
+import io.restassured.http.ContentType;
 import org.testng.annotations.BeforeMethod;
 
 import static io.restassured.RestAssured.given;
@@ -16,6 +17,7 @@ public class BaseTest {
         User user = new User(PropertiesFileReader.getEmail(), PropertiesFileReader.getPassword());
 
         String token = given()
+                .contentType(ContentType.JSON)
                 .when()
                 .body(user)
                 .post("auth/login")
@@ -23,6 +25,5 @@ public class BaseTest {
                 .extract().body().jsonPath().getString("access_token");
 
         TokenRes.getInstance().setToken(token);
-        Specs.instalSpec(Specs.requestSpec(PropertiesFileReader.getBaseURI()), Specs.responseSpecOK200());
     }
 }

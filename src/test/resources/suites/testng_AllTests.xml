@@ -8,6 +8,7 @@
     <test name="AllTests">
         <classes>
             <class name="com.coherentsolutions.training.auto.API.pashkovskaya.tests.JWTAuth"></class>
+            <class name="com.coherentsolutions.training.auto.API.pashkovskaya.tests.UploadFile"></class>
         </classes>
     </test>
 </suite>
